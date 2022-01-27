@@ -3,10 +3,7 @@ package ThreadTest;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author Summer
@@ -17,20 +14,27 @@ import java.util.concurrent.TimeUnit;
 public class MyThreadCommunication {
     public static void main(String[] args) {
         MyThreadComm t = new MyThreadComm();
-        // 创建一个线程池
-        ThreadFactory build = new ThreadFactoryBuilder()
-                .setNameFormat("Thread-pool-%d")
-                .build();
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
-                2,
-                0,
-                TimeUnit.MILLISECONDS,
-                new LinkedBlockingDeque<>(),
-                build,
-                new ThreadPoolExecutor.AbortPolicy());
-        // 使用线程池执行两个线程
-        executor.execute(t);
-        executor.execute(t);
+        // 1 使用Google.guava中的ThreadFactoryBuilder， ThreadPoolExecutor创建一个线程池
+        //ThreadFactory build = new ThreadFactoryBuilder()
+        //        .setNameFormat("Thread-pool-%d")
+        //        .build();
+        //ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
+        //        2,
+        //        0,
+        //        TimeUnit.MILLISECONDS,
+        //        new LinkedBlockingDeque<>(),
+        //        build,
+        //        new ThreadPoolExecutor.AbortPolicy());
+        //// 使用线程池执行两个线程
+        //executor.execute(t);
+        //executor.execute(t);
+        //executor.shutdown();
+
+        // 2 使用Executors创建一个大小为2的线程池
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        service.submit(t);
+        service.submit(t);
+        service.shutdown();
     }
 }
 
